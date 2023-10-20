@@ -56,25 +56,12 @@ export const infoUser = async (req, res) => {
 };
 
 export const refreshToken = (req, res) => {
-
     try {
-        const refreshTokenCookie = req.cookies.refreshToken
-        if (!refreshTokenCookie) throw new Error("No existe el token ");
-        const { uid } = jwt.verify(refreshTokenCookie, process.env.JWT_REFRESH);
-        const { token, expiresIn } = generateToken(uid);
-
+        const { token, expiresIn } = generateToken(req.uid);
         return res.json({ token, expiresIn });
     } catch (error) {
-        console.log(error)
-        const TokenVerificationError = {
-            "invalid signature": "La firma del jwt no es valida",
-            "jwt expired": "JWT expirado",
-            "invalid token": "Token no valido",
-            "No Bearer": "Utiliza formato Bearer",
-            "jwt malformed": "JWT formato no valido"
-        }
-
-        return res.status(401).send({ error: TokenVerificationError[error.message] })
+        console.log(error);
+        return res.status(500).json({ error: "Error de servidor" });
     }
 };
 

@@ -8,4 +8,4 @@ export const validationResultExpress = (req, res, next) => {
     }
 
     next();
-}
+}   
