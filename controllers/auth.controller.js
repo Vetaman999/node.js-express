@@ -1,5 +1,4 @@
 import { User } from "../models/User.js";
-import jwt from "jsonwebtoken";
 import { generateRefreshToken, generateToken } from "../utils/tokenManager.js";
 
 export const register = async (req, res) => {
@@ -11,8 +10,11 @@ export const register = async (req, res) => {
 
         user = new User({ email, password });
         await user.save();
+        const { token, expiresIn } = generateToken(user.id);
 
-        return res.status(201).json({ ok: true });
+        generateRefreshToken(user.id, res);
+
+        return res.status(201).json({ token, expiresIn });
     } catch (error) {
         console.log(error.code);
         if (error.code === 11000) {

@@ -15,5 +15,9 @@ const linkSchema = new Schema({
     },
     uid: {
         type: Schema.Types.ObjectId,
-    }
+        ref: "User",
+        required: true,
+    },
 });
+
+export const Link = model("Link", linkSchema);

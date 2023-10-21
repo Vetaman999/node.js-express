@@ -1,4 +1,5 @@
-import { validationResult, body } from "express-validator";
+import axios from "axios";
+import { validationResult, body, param } from "express-validator";
 
 export const validationResultExpress = (req, res, next) => {
     const errors = validationResult(req);
@@ -7,6 +8,30 @@ export const validationResultExpress = (req, res, next) => {
     }
     next();
 };
+
+export const paramLinkValidator = [
+    param("id", "Formato no validado(EV)").trim().notEmpty().escape(),
+    validationResultExpress
+]
+
+export const bodyLinkValidator = [
+    body("longLink", "formato link incorrecto")
+        .trim().notEmpty()
+        .custom(async (value) => {
+            try {
+                if (!value.startsWith("https://")) {
+                    value = "https://" + value;
+                }
+                await axios.get(value);
+                console.log("hola desde aqui");
+
+                return value;
+            } catch (error) {
+                throw new Error("not found longLink 404");
+            }
+        }),
+    validationResultExpress
+]
 
 export const bodyRegisterValidator = [
     body("email", "Formato incorrecto")
