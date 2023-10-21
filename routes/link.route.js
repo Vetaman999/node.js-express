@@ -10,6 +10,7 @@ const router = Router();
 // PUT      /api/v1/links/:id       update link
 // DELETE   /api/v1/links/:id       remove link
 
+
 router.get("/", requireToken, getLinks);
 router.get("/:id", requireToken, getLink)
 router.post("/", requireToken, bodyLinkValidator, createLink);
